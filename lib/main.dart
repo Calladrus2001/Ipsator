@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ipsator/Pages/Homepage.dart';
+import 'package:ipsator/Views/Homepage.dart';
 import 'package:get/get.dart';
 
 void main() {

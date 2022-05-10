@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:ipsator/Pages/CartPage.dart';
-import 'package:ipsator/Models/PizzaModel.dart';
-import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:ipsator/Services/PizzaService.dart';
+import 'package:ipsator/Views/CartPage.dart';
+import 'package:ipsator/Models/PizzaModel.dart';
+import 'package:ipsator/Widgets/PizzaTile.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -12,27 +12,31 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
+late Pizza _pizza;
+
 class _HomepageState extends State<Homepage> {
+  bool haveData = false;
   bool cartEmpty = true;
   int total = 0;
 
-  /// REST API for pizza data
-  Future<Pizza?> getPizzas() async {
-    final String url =
-        "https://625bbd9d50128c570206e502.mockapi.io/api/v1/pizza/1";
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final String responseString = response.body;
-      print(responseString);
-      return pizzaFromJson(responseString);
-    } else {
-      return null;
+  /// REST API call
+  getData() async {
+    _pizza = await PizzaService().getPizzas();
+    if (_pizza != null) {
+      setState(() {
+        haveData = true;
+      });
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getPizzas();
     return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
@@ -44,17 +48,29 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.white),
 
             /// return list of pizzas chosen (detailed)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                    child: CircularProgressIndicator(
-                        color: Colors.deepOrangeAccent)),
-                SizedBox(height: 24),
-                Text("Fetching delicious pizzas for you!",
-                    style: TextStyle(color: Colors.grey))
-              ],
-            ),
+            haveData
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 80),
+                        PizzaTile().buildTile(_pizza),
+                      ],
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(
+                            color: Colors.deepOrangeAccent),
+                      ),
+                      SizedBox(height: 32),
+                      Text("Fetching delicious pizzas for you!",
+                          style: TextStyle(color: Colors.grey))
+                    ],
+                  ),
 
             /// cart button -> payment screen
             Padding(
