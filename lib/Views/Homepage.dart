@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 import 'package:ipsator/Services/PizzaService.dart';
 import 'package:ipsator/Views/CartPage.dart';
 import 'package:ipsator/Models/PizzaModel.dart';
@@ -38,6 +39,18 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: Badge(
+          badgeContent: Text("$total", style: TextStyle(color: Colors.white)),
+          badgeColor: Colors.deepOrangeAccent,
+          child: FloatingActionButton(
+            child: Icon(Icons.shopping_cart_outlined,
+                color: Colors.deepOrangeAccent),
+            backgroundColor: Colors.white,
+            onPressed: () {
+              Get.to(() => Cartpage(), arguments: total);
+            },
+          ),
+        ),
         backgroundColor: Colors.white,
         body: Stack(
           children: [
@@ -54,7 +67,7 @@ class _HomepageState extends State<Homepage> {
                     child: Column(
                       children: [
                         SizedBox(height: 80),
-                        PizzaTile().buildTile(_pizza),
+                        PizzaTile().buildTile(context, _pizza),
                       ],
                     ),
                   )
@@ -71,43 +84,6 @@ class _HomepageState extends State<Homepage> {
                           style: TextStyle(color: Colors.grey))
                     ],
                   ),
-
-            /// cart button -> payment screen
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      height: 32,
-                      width: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.shopping_cart_rounded,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "$total",
-                            style: TextStyle(
-                                color: Colors.deepOrangeAccent,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18),
-                          )
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          color: Color(0xffF2F4F6),
-                          border: Border.all(width: 0.5, color: Colors.black),
-                          borderRadius: BorderRadius.all(Radius.circular(15)))),
-                  onTap: () {
-                    Get.to(() => Cartpage(), arguments: total);
-                  },
-                ),
-              ),
-            )
           ],
         ));
   }
