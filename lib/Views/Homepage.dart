@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:ipsator/Models/CartItemModel.dart';
 import 'package:ipsator/Services/PizzaService.dart';
 import 'package:ipsator/Views/CartPage.dart';
 import 'package:ipsator/Models/PizzaModel.dart';
@@ -19,6 +21,7 @@ class _HomepageState extends State<Homepage> {
   bool haveData = false;
   bool cartEmpty = true;
   int total = 0;
+  final box = GetStorage();
 
   /// REST API call
   getData() async {
@@ -47,7 +50,7 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.deepOrangeAccent),
             backgroundColor: Colors.white,
             onPressed: () {
-              Get.to(() => Cartpage(), arguments: total);
+              Get.to(() => Cartpage());
             },
           ),
         ),

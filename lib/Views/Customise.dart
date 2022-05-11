@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ipsator/Models/CartItemModel.dart';
 import '../Models/PizzaModel.dart';
 
@@ -15,6 +16,7 @@ class _CustomiseState extends State<Customise> {
   int crust_id = 0;
   int size_id = 0;
   late List<CartItem> cart;
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,7 +236,13 @@ class _CustomiseState extends State<Customise> {
                             1,
                             pizza.crusts![crust_id].sizes![size_id].price);
                         cart = [item];
-                        //TODO : enter list into a local storage
+                        if (box.read("cart") == null) {
+                          box.write("cart", cart);
+                        } else {
+                          cart = box.read("cart");
+                          cart.add(item);
+                          box.write("cart", cart);
+                        }
                         Get.back();
                       },
                     ))

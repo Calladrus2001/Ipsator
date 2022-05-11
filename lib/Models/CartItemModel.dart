@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
+
 class CartItem {
   String? name;
   String? crust;
   String? size;
-  int? quantity;
+  int quantity = 0;
   int? price;
 
   CartItem(name, crust, size, quantity, price) {
