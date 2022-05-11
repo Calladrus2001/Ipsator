@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipsator/Models/CartItemModel.dart';
 import '../Models/PizzaModel.dart';
 
 class Customise extends StatefulWidget {
@@ -13,6 +14,7 @@ class _CustomiseState extends State<Customise> {
   Pizza pizza = Get.arguments;
   int crust_id = 0;
   int size_id = 0;
+  late List<CartItem> cart;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,7 +226,17 @@ class _CustomiseState extends State<Customise> {
                           ],
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        CartItem item = CartItem(
+                            pizza.name,
+                            pizza.crusts![crust_id].name,
+                            pizza.crusts![crust_id].sizes![size_id].name,
+                            1,
+                            pizza.crusts![crust_id].sizes![size_id].price);
+                        cart = [item];
+                        //TODO : enter list into a local storage
+                        Get.back();
+                      },
                     ))
               ],
             ),
