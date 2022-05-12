@@ -14,7 +14,6 @@ class _CartpageState extends State<Cartpage> {
   final box = GetStorage();
   List<CartItem> cart = [];
   var total;
-  var totalPrice = 0;
 
   /// method to build cart-item, implemented here instead of a separate widget because of State concerns
   Widget BuildTile(BuildContext context, CartItem item) {
@@ -47,7 +46,7 @@ class _CartpageState extends State<Cartpage> {
                                 TextStyle(color: Colors.white, fontSize: 12)),
                         backgroundColor: Colors.deepOrangeAccent,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 6),
                       Chip(
                         label: Text(item.size.toString(),
                             style:
@@ -58,7 +57,7 @@ class _CartpageState extends State<Cartpage> {
                   )
                 ],
               ),
-              SizedBox(width: 30),
+              SizedBox(width: 20),
               Row(
                 children: [
                   GestureDetector(
@@ -71,10 +70,8 @@ class _CartpageState extends State<Cartpage> {
                         setState(() {
                           item.quantity -= 1;
                           if (item.quantity == 0) {
-                            setState(() {
-                              cart.remove(item);
-                              box.write("cart", cart);
-                            });
+                            cart.remove(item);
+                            box.write("cart", cart);
                           }
                         });
                       }),
@@ -89,7 +86,9 @@ class _CartpageState extends State<Cartpage> {
                       ),
                       onTap: () {
                         setState(() {
-                          item.quantity += 1;
+                          if (item.quantity < 9) {
+                            item.quantity += 1;
+                          }
                         });
                       }),
                   SizedBox(width: 20),
@@ -109,11 +108,17 @@ class _CartpageState extends State<Cartpage> {
 
   @override
   Widget build(BuildContext context) {
+    int tot_price = 0;
+    int tot_items = 0;
     if (box.read("cart") == null) {
       total = 0;
     } else {
       cart = box.read("cart");
       total = cart.length;
+    }
+    for (int i = 0; i < cart.length; i++) {
+      tot_price += cart[i].quantity * cart[i].price!.toInt();
+      tot_items += cart[i].quantity;
     }
     return Scaffold(
         body: Stack(
@@ -207,14 +212,19 @@ class _CartpageState extends State<Cartpage> {
                         SizedBox(width: 8),
                         Text("Price: ",
                             style: TextStyle(
-                                color: Colors.deepOrangeAccent,
+                                fontSize: 24,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 20)),
-                        Text("\u{20B9}" + "$totalPrice",
+                                color: Colors.deepOrangeAccent)),
+                        Text("\u{20B9}$tot_price",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700))
+                                fontSize: 24, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(width: 8),
+                        Text("Total Pizzas: " + "$tot_items",
+                            style: TextStyle(color: Colors.grey)),
                       ],
                     )
                   ],
