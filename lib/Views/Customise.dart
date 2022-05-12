@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -111,6 +113,7 @@ class _CustomiseState extends State<Customise> {
                             height: 50,
                             width: 130,
                             child: ListTile(
+                              focusColor: Colors.deepOrangeAccent,
                               title: Text(pizza.crusts![index].name.toString(),
                                   style: TextStyle(fontSize: 14)),
                               onTap: () {
@@ -202,7 +205,17 @@ class _CustomiseState extends State<Customise> {
                             fontWeight: FontWeight.w700))
                   ],
                 ),
-                SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                      "Selected: " +
+                          pizza.crusts![crust_id].name.toString() +
+                          " " +
+                          pizza.crusts![crust_id].sizes![size_id].name
+                              .toString(),
+                      style: TextStyle(color: Colors.grey)),
+                ),
+                SizedBox(height: 16),
 
                 /// Add Button
                 Align(
