@@ -240,9 +240,22 @@ class _CustomiseState extends State<Customise> {
                           box.write("cart", cart);
                         } else {
                           cart = box.read("cart");
-                          cart.add(item);
-                          box.write("cart", cart);
+                          int flag = 0;
+                          for (int i = 0; i < cart.length; i++) {
+                            if (cart[i].name == item.name &&
+                                cart[i].crust == item.crust &&
+                                cart[i].size == item.size) {
+                              cart[i].quantity += item.quantity;
+                              box.write("cart", cart);
+                              flag = 1;
+                            }
+                          }
+                          if (flag == 0) {
+                            cart.add(item);
+                            box.write("cart", cart);
+                          }
                         }
+
                         Get.back();
                       },
                     ))

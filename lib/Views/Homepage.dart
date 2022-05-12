@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
-import 'package:ipsator/Models/CartItemModel.dart';
 import 'package:ipsator/Services/PizzaService.dart';
 import 'package:ipsator/Views/CartPage.dart';
 import 'package:ipsator/Models/PizzaModel.dart';
@@ -19,9 +17,8 @@ late Pizza _pizza;
 
 class _HomepageState extends State<Homepage> {
   bool haveData = false;
-  bool cartEmpty = true;
-  int total = 0;
   final box = GetStorage();
+  int total = 0;
 
   /// REST API call
   getData() async {
@@ -37,22 +34,19 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     getData();
+    box.write("total", 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: Badge(
-          badgeContent: Text("$total", style: TextStyle(color: Colors.white)),
-          badgeColor: Colors.deepOrangeAccent,
-          child: FloatingActionButton(
-            child: Icon(Icons.shopping_cart_outlined,
-                color: Colors.deepOrangeAccent),
-            backgroundColor: Colors.white,
-            onPressed: () {
-              Get.to(() => Cartpage());
-            },
-          ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.shopping_cart_outlined,
+              color: Colors.deepOrangeAccent),
+          backgroundColor: Colors.white,
+          onPressed: () {
+            Get.to(() => Cartpage());
+          },
         ),
         backgroundColor: Colors.white,
         body: Stack(

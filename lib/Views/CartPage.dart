@@ -12,13 +12,14 @@ class Cartpage extends StatefulWidget {
 
 class _CartpageState extends State<Cartpage> {
   final box = GetStorage();
-  var cart;
+  List<CartItem> cart = [];
   var total;
+  var totalPrice = 0;
 
   /// method to build cart-item, implemented here instead of a separate widget because of State concerns
   Widget BuildTile(BuildContext context, CartItem item) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
       child: Material(
         elevation: 2.0,
         child: Container(
@@ -69,6 +70,12 @@ class _CartpageState extends State<Cartpage> {
                       onTap: () {
                         setState(() {
                           item.quantity -= 1;
+                          if (item.quantity == 0) {
+                            setState(() {
+                              cart.remove(item);
+                              box.write("cart", cart);
+                            });
+                          }
                         });
                       }),
                   Text(item.quantity.toString(),
@@ -90,7 +97,7 @@ class _CartpageState extends State<Cartpage> {
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
-                          fontWeight: FontWeight.w700))
+                          fontWeight: FontWeight.w700)),
                 ],
               )
             ],
@@ -166,27 +173,52 @@ class _CartpageState extends State<Cartpage> {
               )
 
             /// return list of pizzas chosen (detailed)
-            : Column(
-                children: [
-                  SizedBox(height: 60),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                      child: Row(children: [
-                        Icon(Icons.chevron_left_rounded,
-                            color: Colors.deepOrangeAccent),
-                        Text("Menu",
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.deepOrangeAccent))
-                      ]),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 60),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                        child: Row(children: [
+                          Icon(Icons.chevron_left_rounded,
+                              color: Colors.deepOrangeAccent),
+                          Text("Menu",
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.deepOrangeAccent))
+                        ]),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 24),
-                  BuildTile(context, cart[0])
-                ],
+                    Container(
+                      width: double.infinity,
+                      child: ListView.builder(
+                          itemCount: total,
+                          shrinkWrap: true,
+                          itemBuilder: (context, int index) {
+                            return BuildTile(context, cart[index]);
+                          }),
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(width: 8),
+                        Text("Price: ",
+                            style: TextStyle(
+                                color: Colors.deepOrangeAccent,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20)),
+                        Text("\u{20B9}" + "$totalPrice",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700))
+                      ],
+                    )
+                  ],
+                ),
               ),
       ],
     ));
