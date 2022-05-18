@@ -1,7 +1,3 @@
-# Ipsator Internship Assignment 
-
-Submission by Vishesh Dugar, applied via Internshala. Flutter app for task : Pizza ordering app
-
 ## Abstract
 
 The app fetches available pizzas using _REST API_ and displays them using customised Widgets keeping in mind the parameters of the assignment. Further, 
